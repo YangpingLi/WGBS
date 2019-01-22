@@ -1,0 +1,31 @@
+open FIG,"<E_S.CG_qval.0.05.fasta";
+open OUT,">E_S.CG_qval.0.05.fasta.CpGoe";
+while(<FIG>){
+   chomp;
+   if(/>/){
+      s/>//g;
+	  $name=$_;
+	  $C=$G=$CG=0;
+   }
+   else{
+      $len=length($_);
+	  for($i=0;$i<$len;$i++){
+	     $base=substr($_,$i,1);
+		 if($base eq "C"){
+		    $C++;
+		 }
+		 elsif($base eq "G"){
+		    $G++;
+		 }
+		 $dnuc=substr($_,$i,2);
+		 if($dnuc eq "CG"){
+		    $CG++;
+		 }
+	  }
+	  if($C==0||$G==0||$len==1){$CpGoe="Inf";}
+	  else{
+	     $CpGoe=$CG*$len*$len/($C*$G*($len-1));
+	  }
+	  print OUT "$name\t$C\t$G\t$CG\t$CpGoe\n";
+   }
+}
